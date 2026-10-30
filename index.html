@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SuomiPolku - Finnish B1.1 Mastery</title>
+  
+  <!-- PWA & Mobile Optimization -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#003580">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SuomiPolku">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-wrapper">
+        <svg class="brand-flag" viewBox="0 0 18 11">
+          <rect width="18" height="11" fill="#ffffff"/>
+          <rect x="5" y="0" width="3" height="11" fill="#003580"/>
+          <rect x="0" y="4" width="18" height="3" fill="#003580"/>
+        </svg>
+        <div>
+          <h1 class="brand-title">SuomiPolku</h1>
+          <p class="brand-sub">Matkalla B1.1-tasolle (YKI)</p>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <div class="streak-pill" id="headerStreakPill" title="Harjoitusputki (Streak)">
+          <span>🔥</span> <span id="streakCountText">1</span> pv
+        </div>
+        <div class="level-pill" id="headerLevelPill" title="Paina vaihtaaksesi tasoa">
+          <span id="levelBadgeText">A1.1</span> ▾
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Profile Sub-bar -->
+    <div class="user-switch-bar">
+      <div>
+        <span style="opacity: 0.8;">Käyttäjä:</span> 
+        <strong id="activeProfileName">Minä</strong>
+      </div>
+      <button class="profile-chip-btn" id="btnSwitchProfile">
+        <span>👤</span> Vaihda profiilia
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Content Container -->
+  <main class="main-container">
+
+    <!-- VIEW 1: DAILY WORKOUT (Päivittäinen Treeni) -->
+    <section id="viewWorkout" class="app-view">
+      
+      <!-- Daily Summary Card -->
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>📅</span> Päivän Treeni: 4 Taitoa</h2>
+          <span class="tag-badge tag-reading" id="workoutLevelTag">A1.1</span>
+        </div>
+        <p class="instruction-text">
+          Tee jokainen neljästä taidosta tänään kehittääksesi suomen kieltä tasapainoisesti B1.1-tasolle!
+        </p>
+
+        <!-- 4 Skills Progress Radar -->
+        <div class="skills-grid">
+          <div class="skill-stat-box">
+            <div class="skill-stat-header">
+              <span>📖 Lukeminen</span>
+              <span id="scoreReading">75%</span>
+            </div>
+            <div class="skill-stat-bar-bg"><div id="barReading" class="skill-stat-bar-fill" style="width: 75%;"></div></div>
+          </div>
+          <div class="skill-stat-box">
+            <div class="skill-stat-header">
+              <span>✍️ Kirjoittaminen</span>
+              <span id="scoreWriting">70%</span>
+            </div>
+            <div class="skill-stat-bar-bg"><div id="barWriting" class="skill-stat-bar-fill" style="width: 70%;"></div></div>
+          </div>
+          <div class="skill-stat-box">
+            <div class="skill-stat-header">
+              <span>🎧 Kuuntelu</span>
+              <span id="scoreListening">65%</span>
+            </div>
+            <div class="skill-stat-bar-bg"><div id="barListening" class="skill-stat-bar-fill" style="width: 65%;"></div></div>
+          </div>
+          <div class="skill-stat-box">
+            <div class="skill-stat-header">
+              <span>🗣️ Puhuminen</span>
+              <span id="scoreSpeaking">60%</span>
+            </div>
+            <div class="skill-stat-bar-bg"><div id="barSpeaking" class="skill-stat-bar-fill" style="width: 60%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Selection Tabs -->
+      <div class="tabs-scroll">
+        <button class="tab-btn active" data-skill="reading">📖 Lukeminen</button>
+        <button class="tab-btn" data-skill="writing">✍️ Kirjoitus</button>
+        <button class="tab-btn" data-skill="listening">🎧 Kuuntelu</button>
+        <button class="tab-btn" data-skill="speaking">🗣️ Puhuminen</button>
+      </div>
+
+      <!-- Exercise Box Dynamic Container -->
+      <div id="exerciseContainer" class="card exercise-box">
+        <!-- Injected via JavaScript -->
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: PUHEKIELI LABORATORY (Spoken Finnish) -->
+    <section id="viewPuhekieli" class="app-view hidden">
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>🗣️</span> Puhekielilaboratorio</h2>
+          <span class="tag-badge tag-puhekieli">Arjen Suomi</span>
+        </div>
+        <p class="instruction-text">
+          Suomalaisten arjessa ja työpaikoilla puhutaan puhekieltä. Opi tärkeimmät lyhenteet ja puhetavat!
+        </p>
+
+        <!-- Category Buttons -->
+        <div class="tabs-scroll" id="puheCategoryTabs">
+          <button class="tab-btn active" data-cat="pronouns">Pronominit</button>
+          <button class="tab-btn" data-cat="verbs">Verbit & Passiivi</button>
+          <button class="tab-btn" data-cat="slang_words">Sanat & Slangi</button>
+          <button class="tab-btn" data-cat="numbers">Numerot</button>
+        </div>
+
+        <div id="puhekieliList" class="puhekieli-grid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Quick Interactive Puhekieli Drill -->
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>⚡</span> Puhekielen Pikatesti</h2>
+          <span class="tag-badge tag-listening">Kuuntele & Opi</span>
+        </div>
+        <div id="puheDrillBox">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: TASOKOE & TESTIT (Placement & Milestone Exams) -->
+    <section id="viewTests" class="app-view hidden">
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>📝</span> Alkutason Tasokoe</h2>
+          <span class="tag-badge tag-reading">4 Taitoa</span>
+        </div>
+        <p class="instruction-text">
+          Tee kattava tasokoe, joka testaa lukemista, kirjoittamista, kuuntelua ja puhetta. Jokaisessa kysymyksessä on "En tiedä" -painike oikean tason määrittämiseksi.
+        </p>
+
+        <div id="placementTestRunner">
+          <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <button class="btn-primary" id="btnStartPlacementTest">
+              🚀 Aloita Tasokoe
+            </button>
+            <button class="btn-secondary" id="btnSkipPlacementTest">
+              Ohita & Valitse Taso
+            </button>
+          </div>
+        </div>
+
+        <div id="diagnosticActiveArea" class="hidden">
+          <!-- Injected test questions -->
+        </div>
+      </div>
+
+      <!-- Milestone Exams Card (YKI level up) -->
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>🎯</span> Tasokokeet & YKI-testit</h2>
+          <span class="tag-badge tag-puhekieli">Tason Nousu</span>
+        </div>
+        <p class="instruction-text">
+          Kun olet harjoitellut nykyisellä tasollasi, suorita virallinen tasokoe siirtyäksesi seuraavalle portaalle kohti B1.1- ja C-tasoa!
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
+          <button class="option-btn" id="btnExamA1ToA2">
+            <div>
+              <strong>A1.1 ➔ A1.2 Tasokoe</strong>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Perusviestintä kaupassa ja arjessa</div>
+            </div>
+            <span>✍️</span>
+          </button>
+          <button class="option-btn" id="btnExamA2ToB1">
+            <div>
+              <strong>A2.2 ➔ B1.1 Kansalaisuustesti (YKI)</strong>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Mielipiteet, työelämä ja itsenäinen kieli</div>
+            </div>
+            <span>🇫🇮</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: PALKINNOT & SAAVUTUKSET (Prizes & Badges) -->
+    <section id="viewPrizes" class="app-view hidden">
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title"><span>🏆</span> Palkinnot & Saavutukset</h2>
+          <span class="streak-pill">🔥 <span id="prizesStreakCount">1</span> päivän putki</span>
+        </div>
+        <p class="instruction-text">
+          Kerää merkkejä harjoittelemalla joka päivä ja saavuttamalla uusia kielitaitotasoja!
+        </p>
+
+        <!-- Badges Grid -->
+        <div id="badgesContainer" class="badges-grid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Road to B1.1 Target Card -->
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom: 10px;"><span>🇫🇮</span> Polku B1.1-kansalaisuuteen</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+          Suomen kansalaisuushakemuksen kielitaitovaatimus on virallinen YKI-taso 3 (B1.1).
+        </p>
+        <div class="skill-stat-bar-bg" style="height: 12px; border-radius: 6px;">
+          <div id="b1ProgressBar" class="skill-stat-bar-fill" style="width: 45%; background: linear-gradient(90deg, #003580, #38bdf8);"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; margin-top: 6px; color: var(--text-muted);">
+          <span>A0 Alkeet</span>
+          <span>A1 Perustaso</span>
+          <span>A2 Arki</span>
+          <span style="color: var(--primary);">B1.1 Tavoite 🎯</span>
+          <span>C1 Mestari</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: ASETUKSET & PROFIILIT (Settings & Profiles) -->
+    <section id="viewSettings" class="app-view hidden">
+      <div class="card">
+        <h2 class="card-title" style="margin-bottom: 14px;"><span>⚙️</span> Asetukset & Profiilit</h2>
+        
+        <div style="margin-bottom: 18px;">
+          <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 6px;">
+            Aktiivinen Profiili (Sinä & Tyttöystävä)
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="inputProfileName" class="writing-textarea" style="min-height: 44px; margin-bottom: 0;" placeholder="Nimi...">
+            <button class="btn-primary" id="btnSaveProfileName" style="width: auto; padding: 0 16px;">Tallenna</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 6px;">
+            Nykyinen Kielitaso
+          </label>
+          <button class="btn-secondary" id="btnOpenLevelModal">
+            Vaihda tasoa manuaalisesti (Nykyinen: <strong id="settingsLevelText">A1.1</strong>)
+          </button>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 6px;">
+            Puheen Toistonopeus (Audio Tempo)
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <button class="tab-btn active" id="btnSpeechNormal">1.0x Normaali</button>
+            <button class="tab-btn" id="btnSpeechSlow">0.75x Hidas (Oppija)</button>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border); padding-top: 16px;">
+          <button class="btn-secondary" id="btnTestVoiceOutput" style="margin-bottom: 8px;">
+            🔊 Testaa suomenkielinen ääni
+          </button>
+          <button class="btn-entieda" id="btnResetCurrentData">
+            ⚠️ Nollaa tämän profiilin tiedot
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar for Mobile & Desktop -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-target="viewWorkout">
+      <span class="nav-icon">🏋️</span>
+      <span>Treeni</span>
+    </button>
+    <button class="nav-item" data-target="viewPuhekieli">
+      <span class="nav-icon">🗣️</span>
+      <span>Puhekieli</span>
+    </button>
+    <button class="nav-item" data-target="viewTests">
+      <span class="nav-icon">📝</span>
+      <span>Tasokoe</span>
+    </button>
+    <button class="nav-item" data-target="viewPrizes">
+      <span class="nav-icon">🏆</span>
+      <span>Palkinnot</span>
+    </button>
+    <button class="nav-item" data-target="viewSettings">
+      <span class="nav-icon">⚙️</span>
+      <span>Asetukset</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: LEVEL SELECTOR -->
+  <div class="modal-overlay" id="modalLevelSelect">
+    <div class="modal-content">
+      <div class="card-title-row">
+        <h3 class="card-title"><span>🎯</span> Valitse oma aloitustaso</h3>
+        <button id="btnCloseLevelModal" style="background: none; border: none; font-size: 1.4rem; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+        Voit vaihtaa tasoasi milloin tahansa ilman tasokoetta:
+      </p>
+      <div id="levelsListContainer">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROFILE SWITCHER -->
+  <div class="modal-overlay" id="modalProfileSwitch">
+    <div class="modal-content">
+      <div class="card-title-row">
+        <h3 class="card-title"><span>👥</span> Vaihda käyttäjäprofiilia</h3>
+        <button id="btnCloseProfileModal" style="background: none; border: none; font-size: 1.4rem; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+        Kummallakin käyttäjällä on oma putki (streak), taso ja palkinnot!
+      </p>
+      <div id="profilesListContainer">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.log('ServiceWorker registration note:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
